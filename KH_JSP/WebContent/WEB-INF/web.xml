@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+	version="3.1">
+	
+	<!--  웹 섭르릿 등록 -->
+	<servlet>
+		<servlet-name>now</servlet-name>
+		<servlet-class>servletex.NowServlet</servlet-class>
+	</servlet>
+	
+	<!-- 클라이언트 요청 URL과 서블릿 객체를 연결(매핑) -->
+	<servlet-mapping>
+		<servlet-name>now</servlet-name>
+		<url-pattern>/now</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>JDBCDriverLoader</servlet-name>
+		<servlet-class>servletex.Loader</servlet-class>
+		<init-param>
+			<param-name>jdbcdriver</param-name>
+			<param-value>oracle.jdbc.driver.OracleDriver</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+<!-- 
+	<servlet>
+		<servlet-name>InitParamEx</servlet-name>
+		<servlet-class>servletex.InitParamEx</servlet-class>
+		<init-param>
+			<param-name>url</param-name>
+			<param-value>jdbc:oracle:thin:@localhost:1521:xe</param-value>
+		</init-param>
+		<init-param>
+			<param-name>account</param-name>
+			<param-value>jspexam</param-value>
+		</init-param>
+		<init-param>
+			<param-name>password</param-name>
+			<param-value>1234</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>InitParamEx</servlet-name>
+		<url-pattern>/init</url-pattern>
+	</servlet-mapping>
+-->
+
+<context-param>
+	<param-name>url</param-name>
+	<param-value>jdbc:oracle:thin:@localhost:1521:xe</param-value>
+</context-param>
+
+<display-name>KH_JSP</display-name>
+<servlet>
+	<servlet-name>SimpleController</servlet-name>
+	<servlet-class>controller.SimpleController</servlet-class>
+</servlet>
+
+<servlet-mapping>
+	<servlet-name>SimpleController</servlet-name>
+	<url-pattern>/simple</url-pattern>
+</servlet-mapping>
+
+<servlet>
+	<servlet-name>ControllerUsingFile</servlet-name>
+	<servlet-class>controller.ControllerUsingFile</servlet-class>
+	<init-param>
+		<param-name>configFile</param-name>
+		<param-value>/WEB-INF/commandHandler.properties</param-value>
+	</init-param>
+</servlet>
+
+<servlet-mapping>
+	<servlet-name>ControllerUsingFile</servlet-name>
+	<url-pattern>/controllerUsingFile</url-pattern>
+</servlet-mapping>
+
+<servlet>
+	<servlet-name>ControllerUsingURI</servlet-name>
+	<servlet-class>controller.ControllerUsingURI</servlet-class>
+	<init-param>
+		<param-name>configFile</param-name>
+		<param-value>/WEB-INF/commandHandler.properties</param-value>
+	</init-param>
+</servlet>
+
+<servlet-mapping>
+	<servlet-name>ControllerUsingURI</servlet-name>
+	<url-pattern>*.do</url-pattern>
+</servlet-mapping>
+
+<servlet>
+	<servlet-name>UploadServlet</servlet-name>
+	<servlet-class>fu.UploadServlet</servlet-class>
+	<multipart-config>
+		<location>D:\jspdev\apache-tomcat-8.5.50\upload</location>
+		<max-file-size>-1</max-file-size>
+		<max-request-size>-1</max-request-size>
+		<file-size-threshold>1024</file-size-threshold>
+	</multipart-config>
+</servlet>
+
+<servlet-mapping>
+	<servlet-name>UploadServlet</servlet-name>
+	<url-pattern>/upload</url-pattern>
+</servlet-mapping>
+
+</web-app>

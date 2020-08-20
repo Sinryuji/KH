@@ -1,0 +1,47 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Hello Ajax</title>
+<script type="text/javascript">
+function getXHR(){
+	var req;
+	try{
+		req = new XMLHttpRequest();
+	}catch(e) {
+		try{
+			req = new ActiveXObject('Msxml2.XMLHTTP');
+		}catch(e){
+			req = new ActiveXObject('Microsoft.XMLHTTP');
+		}
+	}
+	return req;
+}
+//전송 버튼이 눌리면 실행되는 이벤트 핸들러
+function asyncSend(){
+	var req = getXHR();
+	//비동기 통신 시 처리할 콜백 함수 정의
+	req.onreadystatechange = function(){
+		if(req.readyState == 4){ //통신 완료 시
+			if(req.status == 200) { // 통신이 성공 한 경우
+				result.innerHTML = req.responseText;
+			} else { //통신이 실패 한 경우
+				result.innerHTML = "서버 에러!";
+			}
+		} else { //통신이 완료되기 전
+			result.innerHTML = "통신 중..."
+		}
+	}
+	//서버와 비동기 통신 개시
+	req.open('GET', 'helloAjax.jsp?name=' + encodeURIComponent(document.fm.name.value), true);
+	req.send(null);
+}
+</script>
+</head>
+<body>
+<form name="fm">
+	<label>이름:<input type="text" name="name" size="15"/></label>
+	<input type="button" name="submit" value="전송" onclick="asyncSend()"/>
+</form>
+<div id="result"></div>
+</body>
+</html>

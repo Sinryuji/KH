@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mybatis">
+	<!-- 매핑에 사용될 쿼리 작성 -->
+	<select id="selectOneMember" parameterType="member" resultType="member">
+		select USER_NO as userNo,
+			USER_ID as userId,
+			USER_PW as userPw,
+			USER_NAME as userName,
+			USER_ADDR as userAddr,
+			REG_DATE as regDate
+		from MEMBER02 where USER_ID=#{userId} and USER_PW=#{userPw}
+	</select>
+	
+	<select id="selectAllMember" resultType="member">
+		select USER_NO as userNo,
+		USER_ID as userId,
+		USER_PW as userPw,
+		USER_NAME as userName,
+		USER_ADDR as userAddr,
+		REG_DATE as regDate
+		from MEMBER02 order by REG_DATE desc
+	</select>
+	
+	<insert id="insertMember" parameterType="member">
+		insert into MEMBER02 values (
+			SEQ_MEMBER02.nextval, 
+			#{userId},
+			#{userPw},
+			#{userName},
+			#{userAddr},
+			default
+		)
+	</insert>
+	
+	<update id="updateMember" parameterType="member">
+		update MEMBER02 set USER_PW = #{userPw}, USER_ADDR = #{userAddr} 
+		where USER_ID = #{userId}
+	</update>
+	
+	<delete id="deleteMember" parameterType="member">
+		delete from MEMBER02 where USER_ID = #{userId}
+	</delete>
+	
+	<select id="checkMember"
+		parameterType="org.kh.member.model.vo.CheckVo"
+		resultType="member">
+	select USER_NO as userNo,
+	<if test="chId != null and chId.equals('on')">
+		USER_ID as userId,
+	</if>
+	<if test="chPw != null and chPw.equals('on')">
+		USER_PW as userPw,
+	</if>
+	<if test="chName != null and chName.equals('on')">
+		USER_NAME as userName,
+	</if>
+	<if test="chAddr != null and chAddr.equals('on')">
+		USER_ADDR as userAddr,
+	</if>
+	REG_DATE reg_date
+	from MEMBER02 order by reg_date desc
+	</select>
+	
+	<select id="searchMember"
+		parameterType="org.kh.member.model.vo.SearchVo"
+		resultType="member">
+	select 	USER_NO as userNo,
+			USER_ID as userId,
+			USER_PW as userPw,
+			USER_NAME as userName,
+			USER_ADDR as userAddr,
+			REG_DATE as regDate from MEMBER02
+			<choose>
+				<when test="select.equals('name')">
+					where USER_NAME like '%'||#{keyword}||'%'
+				</when>
+				<when test="select.equals('id')">
+					where USER_ID like '%'||#{keyword}||'%'
+				</when>
+			</choose>
+	order by REG_DATE desc
+	</select>
+	
+	<select id="searchMember2" parameterType="member" resultType="member">
+	select 	USER_NO as userNo,
+			USER_ID as userId,
+			USER_PW as userPw,
+			USER_NAME as userName,
+			USER_ADDR as userAddr,
+			REG_DATE as regDate from MEMBER02 <!--  where -->
+			<trim prefix="where" prefixOverrides="AND|OR">
+			<if test="userName!=null and userName!=''">
+				USER_NAME like '%'||#{userName}||'%'
+			</if>
+			<if test="userAddr!=null and userAddr!=''">
+				and USER_ADDR like '%'||#{userAddr}||'%'
+			</if>
+			</trim>
+	order by REG_DATE desc
+	</select>
+	
+	<select id="searchMember3" 
+			resultType="member">
+	select 	USER_NO as userNo,
+			USER_ID as userId,
+			USER_PW as userPw,
+			USER_NAME as userName,
+			USER_ADDR as userAddr,
+			REG_DATE as regDate from MEMBER02
+			where USER_ADDR in
+			<foreach 	collection="array" 
+						item="addr" 
+						open="(" 
+						separator="," 
+						close=")">
+			#{addr}
+			</foreach>
+	order by REG_DATE desc
+	</select>
+</mapper>
+
+
